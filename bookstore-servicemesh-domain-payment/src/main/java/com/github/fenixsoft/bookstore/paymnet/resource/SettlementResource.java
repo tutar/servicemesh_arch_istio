@@ -22,10 +22,8 @@ import com.github.fenixsoft.bookstore.dto.Settlement;
 import com.github.fenixsoft.bookstore.paymnet.application.PaymentApplicationService;
 import com.github.fenixsoft.bookstore.paymnet.domain.Payment;
 import com.github.fenixsoft.bookstore.paymnet.domain.validation.SufficientStock;
-import com.github.fenixsoft.bookstore.domain.security.Role;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;

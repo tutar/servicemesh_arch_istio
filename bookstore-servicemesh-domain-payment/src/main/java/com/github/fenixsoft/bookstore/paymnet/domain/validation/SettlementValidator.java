@@ -18,11 +18,10 @@
 
 package com.github.fenixsoft.bookstore.paymnet.domain.validation;
 
-import javax.inject.Inject;
-
-import com.github.fenixsoft.bookstore.paymnet.domain.client.ProductServiceClient;
 import com.github.fenixsoft.bookstore.dto.Settlement;
+import com.github.fenixsoft.bookstore.paymnet.domain.client.ProductServiceClient;
 
+import javax.inject.Inject;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

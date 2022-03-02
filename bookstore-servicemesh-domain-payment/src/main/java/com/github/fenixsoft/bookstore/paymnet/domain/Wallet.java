@@ -19,12 +19,8 @@
 package com.github.fenixsoft.bookstore.paymnet.domain;
 
 import com.github.fenixsoft.bookstore.domain.BaseEntity;
-import com.github.fenixsoft.bookstore.domain.account.Account;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 /**
  * 用户钱包

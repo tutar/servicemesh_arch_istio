@@ -18,11 +18,11 @@
 
 package com.github.fenixsoft.bookstore.paymnet.application;
 
+import com.github.fenixsoft.bookstore.dto.Settlement;
 import com.github.fenixsoft.bookstore.paymnet.domain.Payment;
 import com.github.fenixsoft.bookstore.paymnet.domain.client.ProductServiceClient;
 import com.github.fenixsoft.bookstore.paymnet.domain.service.PaymentService;
 import com.github.fenixsoft.bookstore.paymnet.domain.service.WalletService;
-import com.github.fenixsoft.bookstore.dto.Settlement;
 import org.springframework.cache.Cache;
 
 import javax.annotation.Resource;

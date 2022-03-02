@@ -1,9 +1,7 @@
 package com.github.fenixsoft.bookstore.infrastructure.cache;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

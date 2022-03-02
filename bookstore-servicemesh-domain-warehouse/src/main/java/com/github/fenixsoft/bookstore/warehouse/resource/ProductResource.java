@@ -18,17 +18,15 @@
 
 package com.github.fenixsoft.bookstore.warehouse.resource;
 
-import com.github.fenixsoft.bookstore.infrastructure.jaxrs.CommonResponse;
-import com.github.fenixsoft.bookstore.domain.security.Role;
-import com.github.fenixsoft.bookstore.warehouse.application.ProductApplicationService;
 import com.github.fenixsoft.bookstore.domain.warehouse.Product;
+import com.github.fenixsoft.bookstore.infrastructure.jaxrs.CommonResponse;
+import com.github.fenixsoft.bookstore.warehouse.application.ProductApplicationService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;

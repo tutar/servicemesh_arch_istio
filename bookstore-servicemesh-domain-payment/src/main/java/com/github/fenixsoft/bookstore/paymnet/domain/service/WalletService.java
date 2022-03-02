@@ -20,7 +20,6 @@ package com.github.fenixsoft.bookstore.paymnet.domain.service;
 
 import com.github.fenixsoft.bookstore.paymnet.domain.Wallet;
 import com.github.fenixsoft.bookstore.paymnet.domain.repository.WalletRepository;
-import com.github.fenixsoft.bookstore.domain.account.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

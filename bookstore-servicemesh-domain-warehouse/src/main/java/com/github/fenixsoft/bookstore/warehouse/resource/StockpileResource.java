@@ -1,14 +1,12 @@
 package com.github.fenixsoft.bookstore.warehouse.resource;
 
-import com.github.fenixsoft.bookstore.domain.security.Role;
-import com.github.fenixsoft.bookstore.infrastructure.jaxrs.CommonResponse;
-import com.github.fenixsoft.bookstore.warehouse.application.StockpileApplicationService;
 import com.github.fenixsoft.bookstore.domain.warehouse.DeliveredStatus;
 import com.github.fenixsoft.bookstore.domain.warehouse.Stockpile;
+import com.github.fenixsoft.bookstore.infrastructure.jaxrs.CommonResponse;
+import com.github.fenixsoft.bookstore.warehouse.application.StockpileApplicationService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

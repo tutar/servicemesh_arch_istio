@@ -18,10 +18,10 @@
 
 package com.github.fenixsoft.bookstore.security.configuration;
 
+import com.github.fenixsoft.bookstore.domain.security.AuthenticAccountDetailsService;
 import com.github.fenixsoft.bookstore.infrastructure.configuration.ResourceServerConfiguration;
 import com.github.fenixsoft.bookstore.security.provider.PreAuthenticatedAuthenticationProvider;
 import com.github.fenixsoft.bookstore.security.provider.UsernamePasswordAuthenticationProvider;
-import com.github.fenixsoft.bookstore.domain.security.AuthenticAccountDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

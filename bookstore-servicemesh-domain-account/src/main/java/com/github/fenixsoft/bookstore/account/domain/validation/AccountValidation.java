@@ -21,9 +21,9 @@ package com.github.fenixsoft.bookstore.account.domain.validation;
 import com.github.fenixsoft.bookstore.account.domain.AccountRepository;
 import com.github.fenixsoft.bookstore.domain.account.Account;
 import com.github.fenixsoft.bookstore.domain.security.AuthenticAccount;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.inject.Inject;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.lang.annotation.Annotation;
@@ -40,7 +40,7 @@ import java.util.function.Predicate;
  **/
 public class AccountValidation<T extends Annotation> implements ConstraintValidator<T, Account> {
 
-    @Inject
+    @Autowired
     protected AccountRepository repository;
 
     protected Predicate<Account> predicate = c -> true;

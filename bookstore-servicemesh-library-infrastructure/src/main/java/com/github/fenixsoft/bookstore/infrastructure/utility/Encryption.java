@@ -18,11 +18,10 @@
 
 package com.github.fenixsoft.bookstore.infrastructure.utility;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Named;
 import java.util.Optional;
 
 /**
@@ -31,24 +30,17 @@ import java.util.Optional;
  * @author icyfenix@gmail.com
  * @date 2020/3/10 18:02
  **/
-@Named
+@Component
 public class Encryption {
 
-    /**
-     * 配置认证使用的密码加密算法：BCrypt
-     * 由于在Spring Security很多验证器中都要用到{@link PasswordEncoder}的加密，所以这里要添加@Bean注解发布出去
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * 使用默认加密算法进行编码
      */
     public String encode(CharSequence rawPassword) {
-        return passwordEncoder().encode(Optional.ofNullable(rawPassword).orElse(""));
+        return passwordEncoder.encode(Optional.ofNullable(rawPassword).orElse(""));
     }
 
 }

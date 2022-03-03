@@ -23,11 +23,11 @@ import com.github.fenixsoft.bookstore.paymnet.domain.Payment;
 import com.github.fenixsoft.bookstore.paymnet.domain.client.ProductServiceClient;
 import com.github.fenixsoft.bookstore.paymnet.domain.service.PaymentService;
 import com.github.fenixsoft.bookstore.paymnet.domain.service.WalletService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.transaction.Transactional;
 
 /**
@@ -36,17 +36,17 @@ import javax.transaction.Transactional;
  * @author icyfenix@gmail.com
  * @date 2020/3/12 16:29
  **/
-@Named
+@Service
 @Transactional
 public class PaymentApplicationService {
 
-    @Inject
+    @Autowired
     private PaymentService paymentService;
 
-    @Inject
+    @Autowired
     private WalletService walletService;
 
-    @Inject
+    @Autowired
     private ProductServiceClient productService;
 
     @Resource(name = "settlement")

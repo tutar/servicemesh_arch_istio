@@ -25,11 +25,11 @@ import com.github.fenixsoft.bookstore.paymnet.domain.client.ProductServiceClient
 import com.github.fenixsoft.bookstore.paymnet.domain.repository.PaymentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
 import java.util.Timer;
@@ -41,7 +41,7 @@ import java.util.TimerTask;
  * @author icyfenix@gmail.com
  * @date 2020/3/12 23:24
  **/
-@Named
+@Service
 public class PaymentService {
     /**
      * 默认支付单超时时间：2分钟（缓存TTL时间的一半）
@@ -52,10 +52,10 @@ public class PaymentService {
 
     private final Timer timer = new Timer();
 
-    @Inject
+    @Autowired
     private ProductServiceClient stockpileService;
 
-    @Inject
+    @Autowired
     private PaymentRepository paymentRepository;
 
     @Resource(name = "settlement")

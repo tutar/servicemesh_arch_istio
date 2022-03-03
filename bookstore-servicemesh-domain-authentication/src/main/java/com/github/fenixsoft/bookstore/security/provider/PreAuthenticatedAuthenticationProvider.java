@@ -26,8 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
-
-import javax.inject.Named;
+import org.springframework.stereotype.Service;
 
 /**
  * 预验证身份认证器
@@ -40,7 +39,7 @@ import javax.inject.Named;
  * @date 2020/3/10 11:25
  * @see <a href="https://docs.spring.io/spring-security/site/docs/3.0.x/reference/preauth.html">Pre-Authentication Scenarios</a>
  **/
-@Named
+@Service
 public class PreAuthenticatedAuthenticationProvider implements AuthenticationProvider {
 
     @Override

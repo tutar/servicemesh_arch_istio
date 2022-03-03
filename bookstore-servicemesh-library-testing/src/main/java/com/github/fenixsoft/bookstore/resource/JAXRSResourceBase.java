@@ -1,19 +1,20 @@
 package com.github.fenixsoft.bookstore.resource;
 
-import com.github.fenixsoft.bookstore.infrastructure.security.JWTAccessToken;
-import org.glassfish.jersey.client.HttpUrlConnectorProvider;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 
-import javax.inject.Inject;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,30 +30,46 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(properties = "spring.cloud.config.enabled:false", webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class JAXRSResourceBase extends DBRollbackBase {
 
+
+    private static JsonMapper JSON_MAPPER= new JsonMapper();
+
     @Value("${local.server.port}")
     protected int port;
 
-    @Inject
-    private JWTAccessToken jwtAccessToken;
-
     private String accessToken = null;
 
-    protected Invocation.Builder build(String path) {
-        Invocation.Builder builder = ClientBuilder.newClient().target("http://localhost:" + port + "/restful" + path)
-                .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
-                .request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
-        if (accessToken != null) {
-            builder.header("Authorization", "bearer " + accessToken);
-        }
-        return builder;
+    protected String getUrl(String path){
+        return  "http://localhost:" + port + "/restful"+path;
     }
 
+    protected Map<String,String> getHeader(){
+        // 创建一个 Headers.Builder
+        Map<String,String> header=new HashMap<>(3);
+        header.put("accept", org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
+        header.put("content-type", org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
+        if (accessToken != null) {
+            header.put("Authorization", "bearer " + accessToken);
+        }
+        return header;
+    }
+
+
     protected JSONObject json(Response response) throws JSONException {
-        return new JSONObject(response.readEntity(String.class));
+        try {
+            return new JSONObject(response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     protected JSONArray jsonArray(Response response) throws JSONException {
-        return new JSONArray(response.readEntity(String.class));
+        try {
+            return new JSONArray(response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -90,48 +107,99 @@ public class JAXRSResourceBase extends DBRollbackBase {
     }
 
     protected Response get(String path) {
-        return build(path).get();
+
+        Request request = new Request.Builder()
+                .url(getUrl(path))
+                .headers(Headers.of(getHeader()))
+                .build();
+        return HttpUtil.doRequest(request);
     }
 
     protected Response delete(String path) {
-        return build(path).delete();
+        FormBody body = new FormBody.Builder().build();
+        Request request = new Request.Builder()
+                .url(getUrl(path))
+                .delete(body)
+                .headers(Headers.of(getHeader()))
+                .build();
+        return HttpUtil.doRequest(request);
     }
 
-    protected Response post(String path, Object entity) {
-        return build(path).post(Entity.json(entity));
+    protected Response post(String path,Object entity) {
+
+        try {
+
+            // 或者 FormBody.create 方式，只适用于接口只接收文件流的情况
+            RequestBody requestBody = FormBody.create(okhttp3.MediaType.parse(org.springframework.http.MediaType.APPLICATION_JSON_VALUE),
+                    JSON_MAPPER.writeValueAsString(entity));
+
+            Request request = new Request.Builder()
+                    .url(getUrl(path))
+                    .headers(Headers.of(getHeader()))
+                    .post(requestBody)
+                    .build();
+
+            return HttpUtil.doRequest(request);
+        }catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     protected Response put(String path, Object entity) {
-        return build(path).put(Entity.json(entity));
+        try {
+            // 或者 FormBody.create 方式，只适用于接口只接收文件流的情况
+            RequestBody requestBody = FormBody.create(okhttp3.MediaType.parse(org.springframework.http.MediaType.APPLICATION_JSON_VALUE),
+                    JSON_MAPPER.writeValueAsString(entity));
+
+            Request request = new Request.Builder()
+                    .url(getUrl(path))
+                    .headers(Headers.of(getHeader()))
+                    .put(requestBody)
+                    .build();
+
+            return HttpUtil.doRequest(request);
+        }catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     protected Response patch(String path) {
-        return build(path).method("PATCH", Entity.text("MUST_BE_PRESENT"));
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("text/plain"), "MUST_BE_PRESENT");
+        Request request = new Request.Builder()
+                .url(getUrl(path))
+                .headers(Headers.of(getHeader()))
+                .patch(body)
+                .build();
+
+        return HttpUtil.doRequest(request);
     }
 
     protected static void assertOK(Response response) {
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus(), "期望HTTP Status Code应为：200/OK");
+
+        assertEquals(HttpStatus.OK.value(), response.code(), "期望HTTP Status Code应为：200/OK");
     }
 
     protected static void assertNoContent(Response response) {
-        assertEquals(Response.Status.NO_CONTENT.getStatusCode(), response.getStatus(), "期望HTTP Status Code应为：204/NO_CONTENT");
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.code(), "期望HTTP Status Code应为：204/NO_CONTENT");
     }
 
     protected static void assertBadRequest(Response response) {
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus(), "期望HTTP Status Code应为：400/BAD_REQUEST");
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.code(), "期望HTTP Status Code应为：400/BAD_REQUEST");
     }
 
     protected static void assertForbidden(Response response) {
         // istio环境中权限控制已经从代码实现挪到sidecar实现，单元测试上不会出现403了，这个要在集成测试环境中验证
-        // assertEquals(Response.Status.FORBIDDEN.getStatusCode(), response.getStatus(), "期望HTTP Status Code应为：403/FORBIDDEN");
+        // assertEquals(HttpStatus.FORBIDDEN.value(), response.code(), "期望HTTP Status Code应为：403/FORBIDDEN");
     }
 
     protected static void assertServerError(Response response) {
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus(), "期望HTTP Status Code应为：500/INTERNAL_SERVER_ERROR");
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.code(), "期望HTTP Status Code应为：500/INTERNAL_SERVER_ERROR");
     }
 
     protected static void assertNotFound(Response response) {
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus(), "期望HTTP Status Code应为：404/NOT_FOUND");
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.code(), "期望HTTP Status Code应为：404/NOT_FOUND");
     }
 
 

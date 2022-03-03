@@ -18,13 +18,13 @@
 
 package com.github.fenixsoft.bookstore.infrastructure.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.Optional;
 
 /**
@@ -36,13 +36,13 @@ import java.util.Optional;
  * @author icyfenix@gmail.com
  * @date 2020/3/8 11:07
  **/
-@Named
+@Service
 public class JWTAccessTokenService extends DefaultTokenServices {
 
     /**
      * 构建JWT令牌，并进行默认的配置
      */
-    @Inject
+    @Autowired
     public JWTAccessTokenService(JWTAccessToken token,
                                  OAuthClientDetailsService clientService,
                                  Optional<AuthenticationManager> authenticationManager) {

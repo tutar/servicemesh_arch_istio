@@ -4,9 +4,12 @@ import com.github.fenixsoft.bookstore.domain.warehouse.DeliveredStatus;
 import com.github.fenixsoft.bookstore.domain.warehouse.Product;
 import com.github.fenixsoft.bookstore.domain.warehouse.Stockpile;
 import com.github.fenixsoft.bookstore.dto.Settlement;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,21 +20,17 @@ import java.util.stream.Stream;
  * @author icyfenix@gmail.com
  * @date 2020/4/19 22:22
  **/
-// @FeignClient(name = "warehouse")
+ @FeignClient(name = "warehouse",url = "warehouse")
 public interface ProductServiceClient {
 
     default void replenishProductInformation(Settlement bill) {
         bill.productMap = Stream.of(getProducts()).collect(Collectors.toMap(Product::getId, Function.identity()));
     }
 
-    @GET
-    @Path("/restful/products/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    Product getProduct(@PathParam("id") Integer id);
+    @GetMapping("/restful/products/{id}")
+    Product getProduct(@PathVariable("id") Integer id);
 
-    @GET
-    @Path("/restful/products")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @GetMapping("/restful/products")
     Product[] getProducts();
 
     default void decrease(Integer productId, Integer amount) {
@@ -50,14 +49,10 @@ public interface ProductServiceClient {
         setDeliveredStatus(productId, DeliveredStatus.THAWED, amount);
     }
 
-    @PATCH
-    @Path("/restful/products/stockpile/delivered/{productId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    void setDeliveredStatus(@PathParam("productId") Integer productId, @QueryParam("status") DeliveredStatus status, @QueryParam("amount") Integer amount);
+    @PatchMapping("/restful/products/stockpile/delivered/{productId}")
+    void setDeliveredStatus(@PathVariable("productId") Integer productId, @RequestParam("status") DeliveredStatus status, @RequestParam("amount") Integer amount);
 
-    @GET
-    @Path("/restful/products/stockpile/{productId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    Stockpile queryStockpile(@PathParam("productId") Integer productId);
+    @GetMapping("/restful/products/stockpile/{productId}")
+    Stockpile queryStockpile(@PathVariable("productId") Integer productId);
 
 }

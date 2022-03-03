@@ -21,17 +21,14 @@ package com.github.fenixsoft.bookstore.warehouse.resource;
 import com.github.fenixsoft.bookstore.domain.warehouse.Product;
 import com.github.fenixsoft.bookstore.infrastructure.jaxrs.CommonResponse;
 import com.github.fenixsoft.bookstore.warehouse.application.ProductApplicationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  * 产品相关的资源
@@ -40,19 +37,18 @@ import javax.ws.rs.core.Response;
  * @date 2020/3/6 20:52
  **/
 
-@Path("/products")
-@Component
+@RequestMapping("/restful/products")
+@RestController
 @CacheConfig(cacheNames = "resource.product")
-@Produces(MediaType.APPLICATION_JSON)
 public class ProductResource {
 
-    @Inject
+    @Autowired
     ProductApplicationService service;
 
     /**
      * 获取仓库中所有的货物信息
      */
-    @GET
+    @GetMapping
     @Cacheable(key = "'ALL_PRODUCT'")
     public Iterable<Product> getAllProducts() {
         return service.getAllProducts();
@@ -61,47 +57,45 @@ public class ProductResource {
     /**
      * 获取仓库中指定的货物信息
      */
-    @GET
-    @Path("/{id}")
+    @GetMapping("/{id}")
     @Cacheable(key = "#id")
-    public Product getProduct(@PathParam("id") Integer id) {
+    public Product getProduct(@PathVariable("id") Integer id) {
         return service.getProduct(id);
     }
 
     /**
      * 更新产品信息
      */
-    @PUT
+    @PutMapping
     @Caching(evict = {
             @CacheEvict(key = "#product.id"),
             @CacheEvict(key = "'ALL_PRODUCT'")
     })
-    public Response updateProduct(@Valid Product product) {
+    public CommonResponse updateProduct(@Valid @RequestBody Product product) {
         return CommonResponse.op(() -> service.saveProduct(product));
     }
 
     /**
      * 创建新的产品
      */
-    @POST
+    @PostMapping
     @Caching(evict = {
             @CacheEvict(key = "#product.id"),
             @CacheEvict(key = "'ALL_PRODUCT'")
     })
-    public Product createProduct(@Valid Product product) {
+    public Product createProduct(@Valid @RequestBody Product product) {
         return service.saveProduct(product);
     }
 
     /**
      * 创建新的产品
      */
-    @DELETE
-    @Path("/{id}")
+    @DeleteMapping("/{id}")
     @Caching(evict = {
             @CacheEvict(key = "#id"),
             @CacheEvict(key = "'ALL_PRODUCT'")
     })
-    public Response removeProduct(@PathParam("id") Integer id) {
+    public CommonResponse removeProduct(@PathVariable("id") Integer id) {
         return CommonResponse.op(() -> service.removeProduct(id));
     }
 

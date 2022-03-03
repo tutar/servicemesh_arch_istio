@@ -24,16 +24,15 @@ import com.github.fenixsoft.bookstore.account.domain.validation.NotConflictAccou
 import com.github.fenixsoft.bookstore.account.domain.validation.UniqueAccount;
 import com.github.fenixsoft.bookstore.domain.account.Account;
 import com.github.fenixsoft.bookstore.infrastructure.jaxrs.CommonResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  * 用户资源
@@ -43,41 +42,42 @@ import javax.ws.rs.core.Response;
  * @author icyfenix@gmail.com
  * @date 2020/3/6 20:52
  **/
-@Path("/accounts")
-@Component
+@RequestMapping("/restful/accounts")
+@RestController
 @CacheConfig(cacheNames = "resource.account")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class AccountResource {
 
-    @Inject
+    @Autowired
     private AccountApplicationService service;
 
     /**
      * 根据用户名称获取用户详情
      */
-    @GET
-    @Path("/{username}")
+    @GetMapping("/{username}")
     @Cacheable(key = "#username")
-    public Account getUser(@PathParam("username") String username) {
-        return service.findAccountByUsername(username);
+    public Account getUser(@PathVariable("username") String username, HttpServletResponse response) {
+        Account account = service.findAccountByUsername(username);
+        if(account==null){
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+        }
+        return account;
     }
 
     /**
      * 创建新的用户
      */
-    @POST
+    @PostMapping
     @CacheEvict(key = "#user.username")
-    public Response createUser(@Valid @UniqueAccount Account user) {
+    public CommonResponse createUser(@Valid @UniqueAccount @RequestBody Account user) {
         return CommonResponse.op(() -> service.createAccount(user));
     }
 
     /**
      * 更新用户信息
      */
-    @PUT
+    @PutMapping
     @CacheEvict(key = "#user.username")
-    public Response updateUser(@Valid @AuthenticatedAccount @NotConflictAccount Account user) {
+    public CommonResponse updateUser(@Valid @AuthenticatedAccount @NotConflictAccount @RequestBody Account user) {
         return CommonResponse.op(() -> service.updateAccount(user));
     }
 }

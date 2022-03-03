@@ -1,24 +1,25 @@
 package com.github.fenixsoft.bookstore.paymnet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fenixsoft.bookstore.dto.Item;
 import com.github.fenixsoft.bookstore.dto.Purchase;
 import com.github.fenixsoft.bookstore.dto.Settlement;
 import com.github.fenixsoft.bookstore.paymnet.domain.Payment;
 import com.github.fenixsoft.bookstore.resource.JAXRSResourceBase;
+import okhttp3.Response;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
-
+import java.io.IOException;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author icyfenix@gmail.com
  * @date 2020/4/21 17:04
  **/
 class PaymentResourceTest extends JAXRSResourceBase {
-
+    private static ObjectMapper objectMapper = new ObjectMapper();
     private Settlement createSettlement() {
         Settlement settlement = new Settlement();
         Item item = new Item();
@@ -41,7 +42,12 @@ class PaymentResourceTest extends JAXRSResourceBase {
         authenticatedScope(() -> {
             Response response = post("/settlements", settlement);
             assertOK(response);
-            Payment payment = response.readEntity(Payment.class);
+            Payment payment = null;
+            try {
+                payment = objectMapper.readValue(response.body().string(), Payment.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             assertNotNull(payment.getPayId());
         });
     }
@@ -50,18 +56,29 @@ class PaymentResourceTest extends JAXRSResourceBase {
     void updatePaymentState() {
         final Settlement settlement = createSettlement();
         authenticatedScope(() -> {
-            Payment payment = post("/settlements", settlement).readEntity(Payment.class);
-            assertOK(patch("/pay/" + payment.getPayId() + "?state=PAYED"));
-            assertServerError(patch("/pay/" + payment.getPayId() + "?state=CANCEL"));
-            payment = post("/settlements", settlement).readEntity(Payment.class); // another
-            assertOK(patch("/pay/" + payment.getPayId() + "?state=CANCEL"));
-            assertServerError(patch("/pay/" + payment.getPayId() + "?state=NOT_SUPPORT"));
+            try {
+                Payment payment =objectMapper.readValue(post("/settlements", settlement).body().string(), Payment.class);
+                assertOK(patch("/pay/" + payment.getPayId() + "?state=PAYED"));
+                assertServerError(patch("/pay/" + payment.getPayId() + "?state=CANCEL"));
+                payment = objectMapper.readValue(post("/settlements", settlement).body().string(), Payment.class);  // another
+                assertOK(patch("/pay/" + payment.getPayId() + "?state=CANCEL"));
+                assertServerError(patch("/pay/" + payment.getPayId() + "?state=NOT_SUPPORT"));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         });
     }
 
     @Test
     void updatePaymentStateAlias() {
-        Payment payment = authenticatedGetter(() -> post("/settlements", createSettlement()).readEntity(Payment.class));
+        Payment payment = authenticatedGetter(() -> {
+            try {
+                return objectMapper.readValue(post("/settlements", createSettlement()).body().string(),Payment.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        });
         assertOK(get(payment.getPaymentLink()));
     }
 

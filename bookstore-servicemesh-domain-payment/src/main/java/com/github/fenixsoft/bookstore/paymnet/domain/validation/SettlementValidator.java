@@ -20,8 +20,8 @@ package com.github.fenixsoft.bookstore.paymnet.domain.validation;
 
 import com.github.fenixsoft.bookstore.dto.Settlement;
 import com.github.fenixsoft.bookstore.paymnet.domain.client.ProductServiceClient;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -39,7 +39,7 @@ import javax.validation.ConstraintValidatorContext;
  **/
 public class SettlementValidator implements ConstraintValidator<SufficientStock, Settlement> {
 
-    @Inject
+    @Autowired
     private ProductServiceClient service;
 
     @Override

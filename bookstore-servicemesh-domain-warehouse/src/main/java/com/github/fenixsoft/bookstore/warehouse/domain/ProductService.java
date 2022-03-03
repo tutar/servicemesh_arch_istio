@@ -21,9 +21,9 @@ package com.github.fenixsoft.bookstore.warehouse.domain;
 import com.github.fenixsoft.bookstore.domain.warehouse.Product;
 import com.github.fenixsoft.bookstore.dto.Item;
 import com.github.fenixsoft.bookstore.dto.Settlement;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
  * @author icyfenix@gmail.com
  * @date 2020/3/12 20:58
  **/
-@Named
+@Service
 public class ProductService {
 
-    @Inject
+    @Autowired
     private ProductRepository repository;
 
     /**

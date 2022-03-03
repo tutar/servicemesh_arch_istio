@@ -20,14 +20,11 @@ package com.github.fenixsoft.bookstore.warehouse.resource;
 
 import com.github.fenixsoft.bookstore.warehouse.domain.Advertisement;
 import com.github.fenixsoft.bookstore.warehouse.domain.AdvertisementRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
-
-import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 广告相关的资源
@@ -35,15 +32,14 @@ import javax.ws.rs.core.MediaType;
  * @author icyfenix@gmail.com
  * @date 2020/3/7 10:48
  **/
-@Path("/advertisements")
-@Component
-@Produces(MediaType.APPLICATION_JSON)
+@RequestMapping("/restful/advertisements")
+@RestController
 public class AdvertisementResource {
 
-    @Inject
+    @Autowired
     AdvertisementRepository repository;
 
-    @GET
+    @GetMapping
     @Cacheable("resource.advertisements")
     public Iterable<Advertisement> getAllAdvertisements() {
         return repository.findAll();

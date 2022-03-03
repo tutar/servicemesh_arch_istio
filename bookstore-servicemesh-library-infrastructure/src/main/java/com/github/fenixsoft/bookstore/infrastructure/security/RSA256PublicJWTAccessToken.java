@@ -3,9 +3,9 @@ package com.github.fenixsoft.bookstore.infrastructure.security;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
-import javax.inject.Named;
 import java.io.IOException;
 
 /**
@@ -16,7 +16,7 @@ import java.io.IOException;
  * @author icyfenix@gmail.com
  * @date 2020/7/17 15:15
  **/
-@Named
+@Component
 public class RSA256PublicJWTAccessToken extends JWTAccessToken {
 
     RSA256PublicJWTAccessToken(UserDetailsService userDetailsService) {

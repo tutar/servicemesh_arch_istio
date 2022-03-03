@@ -1,14 +1,19 @@
 package com.github.fenixsoft.bookstore.warehouse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fenixsoft.bookstore.domain.warehouse.Product;
 import com.github.fenixsoft.bookstore.domain.warehouse.Stockpile;
+import com.github.fenixsoft.bookstore.resource.HttpUtil;
 import com.github.fenixsoft.bookstore.resource.JAXRSResourceBase;
+import okhttp3.Response;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author icyfenix@gmail.com
@@ -16,26 +21,28 @@ import static org.junit.jupiter.api.Assertions.*;
  **/
 class ProductResourceTest extends JAXRSResourceBase {
 
+    private static ObjectMapper objectMapper = new ObjectMapper();
+
     @Test
     void getAllProducts() {
         assertOK(get("/products"));
     }
 
     @Test
-    void getProduct() {
+    void getProduct() throws IOException {
         assertOK(get("/products/1"));
         assertNoContent(get("/products/10086"));
-        Product book = get("/products/1").readEntity(Product.class);
+        Product book = objectMapper.readValue(get("/products/1").body().string(),Product.class);
         assertEquals("深入理解Java虚拟机（第3版）", book.getTitle());
     }
 
     @Test
-    void updateProduct() {
-        final Product book = get("/products/1").readEntity(Product.class);
+    void updateProduct() throws IOException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        final Product book =  objectMapper.readValue(get("/products/1").body().string(),Product.class);
         book.setTitle("深入理解Java虚拟机（第4版）");
         assertForbidden(put("/products", book));
         authenticatedScope(() -> assertOK(put("/products", book)));
-        Product modifiedBook = get("/products/1").readEntity(Product.class);
+        Product modifiedBook = objectMapper.readValue(get("/products/1").body().string(),Product.class);
         assertEquals("深入理解Java虚拟机（第4版）", modifiedBook.getTitle());
     }
 
@@ -47,11 +54,15 @@ class ProductResourceTest extends JAXRSResourceBase {
         book.setRate(8.0f);
         assertForbidden(post("/products", book));
         authenticatedScope(() -> {
-            Response response = post("/products", book);
-            assertOK(response);
-            Product fetchBook = response.readEntity(Product.class);
-            assertEquals(book.getTitle(), fetchBook.getTitle());
-            assertNotNull(fetchBook.getId());
+            try {
+                Response response = post("/products", book);
+                assertOK(response);
+                Product fetchBook = objectMapper.readValue(response.body().string(),Product.class);
+                assertEquals(book.getTitle(), fetchBook.getTitle());
+                assertNotNull(fetchBook.getId());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         });
     }
 
@@ -67,7 +78,12 @@ class ProductResourceTest extends JAXRSResourceBase {
     void updateAndQueryStockpile() {
         authenticatedScope(() -> {
             assertOK(patch("/products/stockpile/1?amount=20"));
-            Stockpile stockpile = get("/products/stockpile/1").readEntity(Stockpile.class);
+            Stockpile stockpile = null;
+            try {
+                stockpile = objectMapper.readValue(get("/products/stockpile/1").body().string(), Stockpile.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             assertEquals(20, stockpile.getAmount());
         });
     }

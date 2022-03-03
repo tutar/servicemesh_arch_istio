@@ -3,14 +3,14 @@ package com.github.fenixsoft.bookstore.resource.mock;
 import com.github.fenixsoft.bookstore.domain.account.Account;
 import com.github.fenixsoft.bookstore.domain.security.AccountServiceClient;
 import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Named;
 
 /**
  * @author icyfenix@gmail.com
  * @date 2020/4/21 16:48
  **/
-@Named
+@Component
 @Primary
 public class AccountServiceClientMock implements AccountServiceClient {
 

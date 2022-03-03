@@ -18,12 +18,12 @@
 
 package com.github.fenixsoft.bookstore.domain.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.Optional;
 
 /**
@@ -31,10 +31,10 @@ import java.util.Optional;
  * <p>
  * {@link UserDetailsService}接口定义了从外部（数据库、LDAP，任何地方）根据用户名查询到
  */
-@Named
+@Service
 public class AuthenticAccountDetailsService implements UserDetailsService {
 
-    @Inject
+    @Autowired
     private AuthenticAccountRepository accountRepository;
 
     /**

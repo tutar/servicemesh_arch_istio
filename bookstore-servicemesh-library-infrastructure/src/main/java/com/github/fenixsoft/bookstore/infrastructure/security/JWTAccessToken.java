@@ -18,6 +18,7 @@
 
 package com.github.fenixsoft.bookstore.infrastructure.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,7 +29,6 @@ import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConv
 import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +50,7 @@ import java.util.Map;
 public class JWTAccessToken extends JwtAccessTokenConverter {
 
 
-    @Inject
+    @Autowired
     public JWTAccessToken(UserDetailsService userDetailsService) {
         // 设置从资源请求中带上来的JWT令牌转换回安全上下文中的用户信息的查询服务
         // 如果不设置该服务，则从JWT令牌获得的Principal就只有一个用户名（令牌中确实就只存了用户名）

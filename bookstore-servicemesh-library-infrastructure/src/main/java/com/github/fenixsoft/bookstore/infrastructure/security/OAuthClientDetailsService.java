@@ -20,15 +20,15 @@ package com.github.fenixsoft.bookstore.infrastructure.security;
 
 import com.github.fenixsoft.bookstore.domain.security.GrantType;
 import com.github.fenixsoft.bookstore.domain.security.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +44,7 @@ import java.util.List;
  * @author icyfenix@gmail.com
  * @date 2020/3/7 19:45
  **/
-@Named
+@Service
 public class OAuthClientDetailsService implements ClientDetailsService {
 
     /**
@@ -97,7 +97,7 @@ public class OAuthClientDetailsService implements ClientDetailsService {
     );
 
 
-    @Inject
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private ClientDetailsService clientDetailsService;

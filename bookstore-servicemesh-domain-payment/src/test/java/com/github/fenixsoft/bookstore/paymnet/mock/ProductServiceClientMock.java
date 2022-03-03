@@ -5,14 +5,13 @@ import com.github.fenixsoft.bookstore.domain.warehouse.Product;
 import com.github.fenixsoft.bookstore.domain.warehouse.Stockpile;
 import com.github.fenixsoft.bookstore.paymnet.domain.client.ProductServiceClient;
 import org.springframework.context.annotation.Primary;
-
-import javax.inject.Named;
+import org.springframework.stereotype.Service;
 
 /**
  * @author icyfenix@gmail.com
  * @date 2020/4/21 17:07
  **/
-@Named
+@Service
 @Primary
 public class ProductServiceClientMock implements ProductServiceClient {
 

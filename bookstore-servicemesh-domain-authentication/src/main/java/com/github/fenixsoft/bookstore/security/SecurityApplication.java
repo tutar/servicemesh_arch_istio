@@ -2,6 +2,7 @@ package com.github.fenixsoft.bookstore.security;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * SprintCloud Security 认证、授权服务
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author icyfenix@gmail.com
  * @date 2020/4/18 11:17
  **/
+@EnableFeignClients(basePackages = {"com.github.fenixsoft.bookstore.domain.security"})
 @SpringBootApplication(scanBasePackages = {"com.github.fenixsoft.bookstore"})
 public class SecurityApplication {
     public static void main(String[] args) {

@@ -22,9 +22,8 @@ import com.github.fenixsoft.bookstore.paymnet.domain.Wallet;
 import com.github.fenixsoft.bookstore.paymnet.domain.repository.WalletRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.inject.Named;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 用户钱包的领域服务
@@ -34,12 +33,12 @@ import javax.inject.Named;
  * @author icyfenix@gmail.com
  * @date 2020/3/12 20:23
  **/
-@Named
+@Service
 public class WalletService {
 
     private static final Logger log = LoggerFactory.getLogger(WalletService.class);
 
-    @Inject
+    @Autowired
     private WalletRepository repository;
 
     /**

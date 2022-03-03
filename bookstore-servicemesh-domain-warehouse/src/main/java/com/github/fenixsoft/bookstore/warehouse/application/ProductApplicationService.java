@@ -20,9 +20,9 @@ package com.github.fenixsoft.bookstore.warehouse.application;
 
 import com.github.fenixsoft.bookstore.domain.warehouse.Product;
 import com.github.fenixsoft.bookstore.warehouse.domain.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.transaction.Transactional;
 
 /**
@@ -31,11 +31,11 @@ import javax.transaction.Transactional;
  * @author icyfenix@gmail.com
  * @date 2020/3/15 20:05
  **/
-@Named
+@Service
 @Transactional
 public class ProductApplicationService {
 
-    @Inject
+    @Autowired
     private ProductService service;
 
     /**

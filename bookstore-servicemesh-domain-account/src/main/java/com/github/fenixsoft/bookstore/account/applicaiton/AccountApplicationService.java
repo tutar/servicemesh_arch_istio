@@ -21,9 +21,9 @@ package com.github.fenixsoft.bookstore.account.applicaiton;
 import com.github.fenixsoft.bookstore.account.domain.AccountRepository;
 import com.github.fenixsoft.bookstore.domain.account.Account;
 import com.github.fenixsoft.bookstore.infrastructure.utility.Encryption;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.transaction.Transactional;
 
 /**
@@ -32,14 +32,14 @@ import javax.transaction.Transactional;
  * @author icyfenix@gmail.com
  * @date 2020/3/10 17:46
  **/
-@Named
+@Service
 @Transactional
 public class AccountApplicationService {
 
-    @Inject
+    @Autowired
     private AccountRepository repository;
 
-    @Inject
+    @Autowired
     private Encryption encoder;
 
     public void createAccount(Account account) {

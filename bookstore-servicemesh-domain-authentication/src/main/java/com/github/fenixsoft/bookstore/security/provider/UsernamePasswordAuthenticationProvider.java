@@ -19,6 +19,7 @@
 package com.github.fenixsoft.bookstore.security.provider;
 
 import com.github.fenixsoft.bookstore.domain.security.AuthenticAccountDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,9 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.inject.Inject;
-import javax.inject.Named;
+import org.springframework.stereotype.Service;
 
 /**
  * 基于用户名、密码的身份认证器
@@ -39,13 +38,13 @@ import javax.inject.Named;
  * @author icyfenix@gmail.com
  * @date 2020/3/7 21:45
  */
-@Named
+@Service
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 
-    @Inject
+    @Autowired
     private AuthenticAccountDetailsService authenticAccountDetailsService;
 
-    @Inject
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     /**

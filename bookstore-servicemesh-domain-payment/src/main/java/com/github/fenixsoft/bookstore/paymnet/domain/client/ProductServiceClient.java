@@ -5,9 +5,10 @@ import com.github.fenixsoft.bookstore.domain.warehouse.Product;
 import com.github.fenixsoft.bookstore.domain.warehouse.Stockpile;
 import com.github.fenixsoft.bookstore.dto.Settlement;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.function.Function;
@@ -20,7 +21,8 @@ import java.util.stream.Stream;
  * @author icyfenix@gmail.com
  * @date 2020/4/19 22:22
  **/
- @FeignClient(name = "warehouse",url = "warehouse")
+@Profile(value = {"dev","default","kubernetes"})
+@FeignClient(name = "warehouse",url = "warehouse")
 public interface ProductServiceClient {
 
     default void replenishProductInformation(Settlement bill) {
@@ -49,7 +51,7 @@ public interface ProductServiceClient {
         setDeliveredStatus(productId, DeliveredStatus.THAWED, amount);
     }
 
-    @PatchMapping("/restful/products/stockpile/delivered/{productId}")
+    @PutMapping("/restful/products/stockpile/delivered/{productId}")
     void setDeliveredStatus(@PathVariable("productId") Integer productId, @RequestParam("status") DeliveredStatus status, @RequestParam("amount") Integer amount);
 
     @GetMapping("/restful/products/stockpile/{productId}")

@@ -15,16 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class FeignConfiguration {
 
 
-//    @Bean
-//    public Decoder feignDecoder() {
-//        return new JacksonDecoder();
-//    }
-//
-//    @Bean
-//    public Encoder feignEncoder() {
-//        return new JacksonEncoder();
-//    }
-
     /**
      * 配置认证使用的密码加密算法：BCrypt
      * 由于在Spring Security很多验证器中都要用到{@link PasswordEncoder}的加密，所以这里要添加@Bean注解发布出去
@@ -35,9 +25,5 @@ public class FeignConfiguration {
     }
 
 
-//    @Bean
-//    public AccountServiceClient buildAccountServiceClient() {
-//        return Feign.builder().contract(feignJAXRS2Contract()).decoder(feignDecoder()).encoder(feignEncoder()).target(AccountServiceClient.class, "http://account");
-//    }
 
 }

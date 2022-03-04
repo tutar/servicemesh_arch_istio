@@ -2,6 +2,7 @@ package com.github.fenixsoft.bookstore.domain.security;
 
 import com.github.fenixsoft.bookstore.domain.account.Account;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author icyfenix@gmail.com
  * @date 2020/4/18 12:33
  **/
+@Profile(value = {"dev","default","kubernetes"})
 @FeignClient(name = "account",url = "account")
 public interface AccountServiceClient {
 

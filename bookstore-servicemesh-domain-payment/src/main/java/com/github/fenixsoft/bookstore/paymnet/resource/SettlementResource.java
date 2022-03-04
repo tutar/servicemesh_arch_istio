@@ -18,11 +18,13 @@
 
 package com.github.fenixsoft.bookstore.paymnet.resource;
 
+import com.github.fenixsoft.bookstore.dto.Item;
 import com.github.fenixsoft.bookstore.dto.Settlement;
 import com.github.fenixsoft.bookstore.paymnet.application.PaymentApplicationService;
 import com.github.fenixsoft.bookstore.paymnet.domain.Payment;
-import com.github.fenixsoft.bookstore.paymnet.domain.validation.SufficientStock;
+import com.github.fenixsoft.bookstore.paymnet.domain.client.ProductServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,16 +40,25 @@ import javax.validation.Valid;
  **/
 @RequestMapping("/restful/settlements")
 @RestController
+@Validated
 public class SettlementResource {
 
     @Autowired
     private PaymentApplicationService service;
 
+    @Autowired
+    private ProductServiceClient productServiceClient;
     /**
      * 提交一张交易结算单，根据结算单中的物品，生成支付单
      */
     @PostMapping
-    public Payment executeSettlement(@Valid @SufficientStock @RequestBody Settlement settlement) {
+    public Payment executeSettlement(@Valid @RequestBody Settlement settlement) {
+        for(Item item:settlement.getItems()){
+            if(productServiceClient.queryStockpile(item.getProductId()).getAmount() < item.getAmount()){
+                throw new UnsupportedOperationException("商品库存不足");
+            }
+        }
+
         return service.executeBySettlement(settlement);
     }
 

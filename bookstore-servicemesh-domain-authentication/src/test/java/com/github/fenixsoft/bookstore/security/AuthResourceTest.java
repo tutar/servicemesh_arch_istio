@@ -19,10 +19,6 @@ public class AuthResourceTest extends JAXRSResourceBase {
     void refreshToken() throws JSONException {
         String prefix = "http://localhost:" + port + "/oauth/token?";
         String url = prefix + "username=icyfenix&password=MFfTW3uNI4eqhwDkG7HP9p2mzEUu%2Fr2&grant_type=password&client_id=bookstore_frontend&client_secret=bookstore_secret";
-        Request request = new Request.Builder()
-                .url(url)
-                .headers(Headers.of(getHeader()))
-                .build();
         Response resp = HttpUtil.doRequest(new Request.Builder().url(url).build());
         String refreshToken = json(resp).getString("refresh_token");
         url = prefix + "refresh_token=" + refreshToken + "&grant_type=refresh_token&client_id=bookstore_frontend&client_secret=bookstore_secret";

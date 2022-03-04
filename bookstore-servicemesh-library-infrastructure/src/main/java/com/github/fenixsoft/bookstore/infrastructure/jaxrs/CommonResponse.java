@@ -3,6 +3,7 @@ package com.github.fenixsoft.bookstore.infrastructure.jaxrs;
 import com.google.common.base.MoreObjects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 import java.util.function.Consumer;
@@ -13,7 +14,7 @@ public class CommonResponse<T> implements Serializable {
     /**
      * 状态码
      * 若该值返回给前端，会转为http code
-     * 默认成功 200，失败400，
+     * 默认成功 200，失败500，
      */
     private int status;
 
@@ -87,7 +88,7 @@ public class CommonResponse<T> implements Serializable {
 
     public static <T> CommonResponse<T> failure(String error) {
         CommonResponse resp = new CommonResponse();
-        resp.setError(400,error);
+        resp.setError(HttpStatus.INTERNAL_SERVER_ERROR.value(),error);
         return resp;
     }
     public static <T> CommonResponse<T> fail(String error, int code) {
@@ -114,7 +115,8 @@ public class CommonResponse<T> implements Serializable {
             return CommonResponse.ok();
         } catch (Exception e) {
             exceptionConsumer.accept(e);
-            return CommonResponse.failure(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+//            return CommonResponse.failure(e.getMessage());
         }
     }
 

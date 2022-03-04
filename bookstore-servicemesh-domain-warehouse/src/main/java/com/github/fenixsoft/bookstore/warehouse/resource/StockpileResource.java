@@ -44,7 +44,7 @@ public class StockpileResource {
     /**
      * 将指定的产品库存调整为指定数额
      */
-    @PatchMapping("/stockpile/delivered/{productId}")
+    @PutMapping("/stockpile/delivered/{productId}")
     public CommonResponse setDeliveredStatus(@PathVariable("productId") Integer productId, @RequestParam("status") DeliveredStatus status, @RequestParam("amount") Integer amount) {
         return CommonResponse.op(() -> service.setDeliveredStatus(productId, status, amount));
     }

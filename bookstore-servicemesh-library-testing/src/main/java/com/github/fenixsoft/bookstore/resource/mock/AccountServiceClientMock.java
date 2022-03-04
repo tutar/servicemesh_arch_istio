@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 @Primary
+
 public class AccountServiceClientMock implements AccountServiceClient {
 
     @Override

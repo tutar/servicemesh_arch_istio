@@ -58,7 +58,8 @@ public class PaymentResource {
         if (state == Payment.State.PAYED) {
             return CommonResponse.op(() -> service.accomplishPayment(accountId, payId));
         } else {
-            return CommonResponse.op(() -> service.cancelPayment(payId));
+            CommonResponse response = CommonResponse.op(() -> service.cancelPayment(payId));
+            return response;
         }
     }
 

@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  **/
 class PaymentResourceTest extends JAXRSResourceBase {
     private static ObjectMapper objectMapper = new ObjectMapper();
-    private Settlement createSettlement() {
+    public static Settlement createSettlement() {
         Settlement settlement = new Settlement();
         Item item = new Item();
         Purchase purchase = new Purchase();

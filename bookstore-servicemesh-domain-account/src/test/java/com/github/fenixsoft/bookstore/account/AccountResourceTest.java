@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fenixsoft.bookstore.domain.account.Account;
 import com.github.fenixsoft.bookstore.resource.JAXRSResourceBase;
 import okhttp3.Response;
-import org.apache.commons.beanutils.BeanUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

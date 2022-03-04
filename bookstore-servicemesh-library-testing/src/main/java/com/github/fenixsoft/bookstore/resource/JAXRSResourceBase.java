@@ -2,6 +2,7 @@ package com.github.fenixsoft.bookstore.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.github.fenixsoft.bookstore.domain.security.AccountServiceClient;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,6 +10,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
@@ -27,7 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author icyfenix@gmail.com
  * @date 2020/4/6 19:32
  **/
-@SpringBootTest(properties = "spring.cloud.config.enabled:false", webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(properties = "spring.cloud.config.enabled:false",
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ComponentScan(value = {"com.github.fenixsoft.bookstore"})
 public class JAXRSResourceBase extends DBRollbackBase {
 
 

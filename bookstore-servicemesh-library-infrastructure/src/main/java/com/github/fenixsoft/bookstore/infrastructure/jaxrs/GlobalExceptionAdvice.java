@@ -25,7 +25,7 @@ public class GlobalExceptionAdvice {
 
     @ExceptionHandler(value = {WebExchangeBindException.class})
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CommonResponse handle(WebExchangeBindException e) {
 
         List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
@@ -44,7 +44,7 @@ public class GlobalExceptionAdvice {
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CommonResponse handle(ConstraintViolationException e) {
         return CommonResponse.failure(e.getMessage());
 
@@ -52,15 +52,22 @@ public class GlobalExceptionAdvice {
 
     @ExceptionHandler(value = {ResponseStatusException.class})
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CommonResponse handle(ResponseStatusException e) {
         return CommonResponse.failure(e.getReason());
     }
 
     @ExceptionHandler(value = {Exception.class})
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CommonResponse handle(Exception e) {
+        return CommonResponse.failure(e.getMessage());
+    }
+
+    @ExceptionHandler(value = {UnsupportedOperationException.class})
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public CommonResponse handle(UnsupportedOperationException e) {
         return CommonResponse.failure(e.getMessage());
     }
 }
